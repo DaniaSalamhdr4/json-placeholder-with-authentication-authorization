@@ -37,3 +37,7 @@ app.use("/auth", authRouter);
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
+
+
+
+//node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"

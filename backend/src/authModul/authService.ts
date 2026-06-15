@@ -1,6 +1,6 @@
 import { User } from "../moduels/users/usersModel.js";
 import bcrypt from "bcryptjs";
-import { body, validationResult } from "express-validator";
+import jwt from "jsonwebtoken";
 
 export class authServices {
   registerServices = async (userData: any) => {
@@ -10,8 +10,41 @@ export class authServices {
       throw new Error("Email already exists");
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await  User.create({ username, email, password: hashedPassword });
+    const user = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+    });
     const { password: _, ...rest } = user.toObject();
     return rest;
+  };
+  loginServices = async (email: string, password: string) => {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      throw new Error("Invalid email or password");
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      throw new Error("Invalid email or password");
+    }
+    const token = jwt.sign(
+      {
+        id: user.id,
+        email: user.email,
+      },
+      process.env.JWT_SECRET!,
+      {
+        expiresIn: "1d",
+      },
+    );
+    return {
+      token,
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      },
+    };
   };
 }

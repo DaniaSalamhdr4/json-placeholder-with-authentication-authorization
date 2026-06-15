@@ -4,5 +4,6 @@ import { body } from "express-validator";
 const authOb = new authController();
 const router = Router();
 
-router.post("/", authOb.registerController);
+router.post("/register", authOb.registerController);
+router.post("/login", authOb.loginController);
 export default router;
