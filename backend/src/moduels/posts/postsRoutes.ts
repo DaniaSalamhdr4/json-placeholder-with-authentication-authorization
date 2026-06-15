@@ -1,6 +1,7 @@
 import { postController } from "./postsController.js";
 import { Router } from "express";
 import { authMiddleware } from "../../middleware/authMiddleware.js";
+import { postOwnerMiddleware } from "../../middleware/postOwnerMiddleware.js";
 const router = Router();
 const postOb = new postController();
 
@@ -8,7 +9,23 @@ const postOb = new postController();
 router.get("/", postOb.getPostsController);
 router.get("/:id", postOb.getPostByIDController);
 router.post("/", authMiddleware, postOb.createPostController);
-router.put("/:id", postOb.updatePostController);
-router.patch("/:id", postOb.updatePostControllerPatch);
-router.delete("/:id", postOb.deletePostControllerPat);
+router.put(
+  "/:id",
+  authMiddleware,
+  postOwnerMiddleware,
+  postOb.updatePostController,
+);
+router.patch(
+  "/:id",
+  authMiddleware,
+  postOwnerMiddleware,
+  postOb.updatePostControllerPatch,
+);
+router.delete(
+  "/:id",
+  authMiddleware,
+  postOwnerMiddleware,
+  postOb.deletePostControllerPat,
+);
+
 export default router;
