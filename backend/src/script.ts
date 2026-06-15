@@ -5,6 +5,7 @@ import postRouter from "./moduels/posts/postsRoutes.js";
 import photoRouter from "./moduels/photos/photosRouters.js";
 import albumRouter from "./moduels/albums/albumsRouters.js";
 import commentRouter from "./moduels/comment/commentsRouter.js";
+import authRouter from "./authModul/authRouter.js";
 import dotenv from "dotenv";
 dotenv.config();
 import connectDB from "./config/connectDB.js";
@@ -31,6 +32,8 @@ app.use("/comments", commentRouter);
 // posts APIs
 app.use("/posts", postRouter);
 
+// auth APIs
+app.use("/auth", authRouter);
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
